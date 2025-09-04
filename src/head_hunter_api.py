@@ -41,8 +41,12 @@ class HeadHunterAPI(VacancyParser):
                     "job_title": vacancy.get("name"),
                     "requirements": vacancy["snippet"]["requirement"],
                     "responsibility": vacancy["snippet"]["responsibility"],
-                    "salary": (vacancy["salary"]["from"] if vacancy["salary"] else "-"),
+                    "salary_from": vacancy["salary"]["from"] if vacancy["salary"] else "-",
+                    "salary_to": vacancy["salary"]["to"] if vacancy["salary"] else "-",
                     "job_link": vacancy.get("alternate_url"),
+                    "employer_name": vacancy["employer"]["name"],
+                    "experience": vacancy["experience"]["name"]
+
                 }
 
                 list_vacancies.append(Vacancy.add_vacancy(vacancy_dict))

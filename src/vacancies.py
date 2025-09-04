@@ -3,22 +3,40 @@ class Vacancy:
 
     job_title: str  # название вакансии
     job_link: str  # ссылка на вакансию
-    salary: int  # зарплата
+    salary_from: int  # зарплата от
+    salary_to: int
     requirements: str  # требования
     responsibility: str  # обязанности
-    __slots__ = ("job_title", "job_link", "salary", "requirements", "responsibility")
+    employer_name:str # название компании
+    experience:str # требуемый опыт
+
+    __slots__ = ("job_title",
+                 "job_link",
+                 "salary_from",
+                 "salary_to"
+                 "requirements",
+                 "responsibility",
+                 "employer_name",
+                 "experience")
 
     def __init__(self,
                  job_title: str,
                  requirements: str,
                  responsibility: str,
-                 salary: int,
-                 job_link: str):
+                 salary_from: int,
+                 salary_to:int,
+                 job_link: str,
+                 employer_name: str,
+                 experience: str
+                 ):
 
         self.job_title = job_title
         self.requirements = requirements
         self.responsibility = responsibility
-        self.salary = self.__validation_salary(salary)
+        self.salary_from = self.__validation_salary(salary_from)
+        self.salary_to = self.__validation_salary(salary_to)
+        self.employer_name = self.employer_name
+        self.experience = self.experience
         self.job_link = job_link
 
     @staticmethod
