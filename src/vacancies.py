@@ -13,7 +13,7 @@ class Vacancy:
     __slots__ = ("job_title",
                  "job_link",
                  "salary_from",
-                 "salary_to"
+                 "salary_to",
                  "requirements",
                  "responsibility",
                  "employer_name",
@@ -35,8 +35,8 @@ class Vacancy:
         self.responsibility = responsibility
         self.salary_from = self.__validation_salary(salary_from)
         self.salary_to = self.__validation_salary(salary_to)
-        self.employer_name = self.employer_name
-        self.experience = self.experience
+        self.employer_name = employer_name
+        self.experience = experience
         self.job_link = job_link
 
     @staticmethod
@@ -51,27 +51,27 @@ class Vacancy:
         """Метод для проверки принадлежности объекта к классу int или Vacancy"""
         if not isinstance(other, (int, Vacancy)):
             raise TypeError("Сравнивать можно только с типом int или Vacancy")
-        return other if isinstance(other, int) else other.salary
+        return other if isinstance(other, int) else other.salary_to
 
     def __eq__(self, other):
         salary = self.__verify_data(other)
-        return self.salary == salary
+        return self.salary_to == salary
 
     def __gt__(self, other):
         salary = self.__verify_data(other)
-        return self.salary > salary
+        return self.salary_to > salary
 
     def __ge__(self, other):
         salary = self.__verify_data(other)
-        return self.salary >= salary
+        return self.salary_to >= salary
 
     def __lt__(self, other):
         salary = self.__verify_data(other)
-        return self.salary < salary
+        return self.salary_to < salary
 
     def __le__(self, other):
         salary = self.__verify_data(other)
-        return self.salary <= salary
+        return self.salary_to <= salary
 
     @classmethod
     def add_vacancy(cls, vacancy_dict: dict):

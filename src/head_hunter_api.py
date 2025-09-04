@@ -46,13 +46,8 @@ class HeadHunterAPI(VacancyParser):
                     "job_link": vacancy.get("alternate_url"),
                     "employer_name": vacancy["employer"]["name"],
                     "experience": vacancy["experience"]["name"]
-
                 }
-
                 list_vacancies.append(Vacancy.add_vacancy(vacancy_dict))
             return list_vacancies
         except ConnectionError:
             return list_vacancies
-
-a= HeadHunterAPI()
-print(a.load_vacancies())
