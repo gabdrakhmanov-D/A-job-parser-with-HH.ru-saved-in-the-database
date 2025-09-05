@@ -9,24 +9,26 @@ class CreateDB:
 
     def __init__(self, database_name):
         self.database_name = database_name
-        self.db = self.get_config()
+        self.__db = self.__get_config()
 
 
-    def get_config(self, filename=PATH_TO_DB_INI, section="postgresql"):
+    def __get_config(self, filename:str=PATH_TO_DB_INI, section:str="postgresql") -> dict:
+        """ Метод для получения конфигурации базы данных """
         parser = ConfigParser()
         parser.read(filename)
-        self.db = {}
+        self.__db = {}
         if parser.has_section(section):
             params = parser.items(section)
             for param in params:
-                self.db[param[0]] = param[1]
-            return self.db
+                self.__db[param[0]] = param[1]
+            return self.__db
         else:
             raise Exception(
                 'Section {0} is not found in the {1} file.'.format(section, filename))
 
     def create_new_db(self):
-        conn = psycopg2.connect(dbname='postgres', **self.db)
+        """ Метод, который создает новую базу данных """
+        conn = psycopg2.connect(dbname='postgres', **self.__db)
         conn.autocommit = True
         cur = conn.cursor()
 
@@ -35,7 +37,7 @@ class CreateDB:
 
         conn.close()
 
-        conn = psycopg2.connect(dbname=self.database_name, **self.db)
+        conn = psycopg2.connect(dbname=self.database_name, **self.__db)
 
         with conn.cursor() as cur:
             cur.execute("""
@@ -49,14 +51,14 @@ class CreateDB:
             cur.execute("""
                     CREATE TABLE vacancies (
                         vacancy_id SERIAL PRIMARY KEY,
-                        company_id INT REFERENCES companies(company_id),
                         job_title VARCHAR NOT NULL,
-                        job_link TEXT UNIQUE,
-                        salary_from INTEGER,
-                        salary_to INTEGER,
+                        company_id INT REFERENCES companies(company_id),
                         requirements TEXT,
                         responsibility TEXT,
-                        experience VARCHAR(255)                        
+                        experience VARCHAR(255),
+                        salary_from INTEGER,
+                        salary_to INTEGER,
+                        job_link TEXT UNIQUE                        
                     )
                 """)
 
