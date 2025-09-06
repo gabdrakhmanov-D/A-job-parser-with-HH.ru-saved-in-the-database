@@ -8,9 +8,46 @@ class HeadHunterAPI(VacancyParser):
 
     def __init__(self):
         self.keyword = ""
-        self.__url = "https://api.hh.ru/vacancies"
+        self.__base_url = "https://api.hh.ru/"
         self.__headers = {"User-Agent": "HH-User-Agent"}
         self.__params = {"text": "", "page": 0, "per_page": 100}
+
+    def get_items(self, end_url:str, params:dict):
+        """ Метод для загрузки информации по вакансиям или компаниям """
+
+        url = self.__base_url + end_url
+        items = []
+
+        while params["page"] < 20:
+            response = requests.get(
+                url, headers=self.__headers, params=params            )
+
+            if response.status_code == 200:
+                current_vacancies = response.json().get("items", [])
+                items.extend(current_vacancies)
+                params["page"] += 1
+            else:
+                raise ConnectionError(f"Ошибка запроса: {response.status_code}")
+
+        return items
+
+    def get_list_employers(self, employer_name):
+        employers = []
+        params = {"text": employer_name,
+                  'only_with_vacancies': True,
+                  "page": self.__params["page"],
+                  "per_page": self.__params["per_page"]}
+        list_employers = self.get_items('employers/', params)
+
+        for employer in list_employers:
+            employers.append({
+                'id': employer['id'],
+                'name': employer['name'],
+                'url': employer['alternate_url'],
+                'open_vacancies': employer['open_vacancies']
+            })
+
+        return employers
 
     def load_vacancies(self) -> list:
         """Метод для получения списка вакансий с сервера"""
@@ -18,7 +55,7 @@ class HeadHunterAPI(VacancyParser):
         self.__params["text"] = self.keyword
         while self.__params["page"] < 20:
             response = requests.get(
-                self.__url, headers=self.__headers, params=self.__params
+                self.__base_url, headers=self.__headers, params=self.__params
             )
 
             if response.status_code == 200:

@@ -1,6 +1,6 @@
 import psycopg2
 
-from src.create_DB import CreateDB
+from src.creator_db import CreateDB
 
 
 class SaveVacancyToDB(CreateDB):
