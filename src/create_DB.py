@@ -43,7 +43,7 @@ class CreateDB:
             cur.execute("""
                     CREATE TABLE companies (
                         company_id SERIAL PRIMARY KEY,
-                        company_name VARCHAR(255) NOT NULL
+                        company_name VARCHAR(100) NOT NULL
                     )
                 """)
 
@@ -55,7 +55,7 @@ class CreateDB:
                         company_id INT REFERENCES companies(company_id),
                         requirements TEXT,
                         responsibility TEXT,
-                        experience VARCHAR(255),
+                        experience VARCHAR(50),
                         salary_from INTEGER,
                         salary_to INTEGER,
                         job_link TEXT UNIQUE                        
