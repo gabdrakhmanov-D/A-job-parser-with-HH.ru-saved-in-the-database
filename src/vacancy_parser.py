@@ -9,9 +9,9 @@ class VacancyParser(ABC):
     params: dict  # параметры запроса
 
     @abstractmethod
-    def load_vacancies(self):
+    def get_list_employers(self, employer_name):
         pass
 
     @abstractmethod
-    def get_vacancies(self, keyword: str):
+    def get_vacancies(self, keyword: str, employer_id:int, only_with_salary:bool):
         pass
