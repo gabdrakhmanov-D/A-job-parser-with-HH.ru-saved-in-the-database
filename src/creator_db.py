@@ -31,36 +31,38 @@ class CreateDB:
         conn = psycopg2.connect(dbname='postgres', **self.__config_db)
         conn.autocommit = True
         cur = conn.cursor()
+        try:
+            cur.execute(f"CREATE DATABASE {self.database_name}")
+            conn.close()
+        except psycopg2.errors.DuplicateDatabase:
+            conn = psycopg2.connect(dbname=self.database_name, **self.__config_db)
 
-        cur.execute(f"DROP DATABASE {self.database_name}")
-        cur.execute(f"CREATE DATABASE {self.database_name}")
+            with conn.cursor() as cur:
+                cur.execute("""
+                        CREATE TABLE IF NOT EXISTS employers (
+                            id SERIAL PRIMARY KEY,
+                            external_id VARCHAR(100) NOT NULL,
+                            name VARCHAR(100) NOT NULL,
+                            city VARCHAR(50) NOT NULL,
+                            url VARCHAR(100) NOT NULL,
+                            link_to_profile VARCHAR(100) NOT NULL
+                        )
+                    """)
 
-        conn.close()
+            with conn.cursor() as cur:
+                cur.execute("""
+                        CREATE TABLE IF NOT EXISTS vacancies (
+                            id SERIAL PRIMARY KEY,
+                            job_title VARCHAR NOT NULL,
+                            company_id INT REFERENCES employers(id),
+                            requirements TEXT,
+                            responsibility TEXT,
+                            experience VARCHAR(50),
+                            salary_from INTEGER,
+                            salary_to INTEGER,
+                            job_link TEXT UNIQUE                        
+                        )
+                    """)
 
-        conn = psycopg2.connect(dbname=self.database_name, **self.__config_db)
-
-        with conn.cursor() as cur:
-            cur.execute("""
-                    CREATE TABLE companies (
-                        company_id SERIAL PRIMARY KEY,
-                        company_name VARCHAR(100) NOT NULL
-                    )
-                """)
-
-        with conn.cursor() as cur:
-            cur.execute("""
-                    CREATE TABLE vacancies (
-                        vacancy_id SERIAL PRIMARY KEY,
-                        job_title VARCHAR NOT NULL,
-                        company_id INT REFERENCES companies(company_id),
-                        requirements TEXT,
-                        responsibility TEXT,
-                        experience VARCHAR(50),
-                        salary_from INTEGER,
-                        salary_to INTEGER,
-                        job_link TEXT UNIQUE                        
-                    )
-                """)
-
-        conn.commit()
-        conn.close()
+            conn.commit()
+            conn.close()
