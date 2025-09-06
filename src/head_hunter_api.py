@@ -1,5 +1,6 @@
 import requests
 
+from src.employer_info import EmployerInfo
 from src.employers import Employers
 from src.vacancies import Vacancy
 from src.vacancy_parser import VacancyParser
@@ -14,12 +15,19 @@ class HeadHunterAPI(VacancyParser):
         self.__headers = {"User-Agent": "HH-User-Agent"}
         self.__params = {"text": "", "page": 0, "per_page": 100}
 
-    def get_items(self, end_url:str, params:dict):
+    def get_items(self, end_url:str, params:dict, key_items:bool=True):
         """ Метод для загрузки информации по вакансиям или компаниям """
 
         url = self.__base_url + end_url
-        items = []
 
+        if not key_items:
+            response = requests.get(url, headers=self.__headers)
+            if response.status_code == 200:
+                return response.json()
+            else:
+                raise ConnectionError(f"Ошибка запроса: {response.status_code}")
+
+        items = []
         while params["page"] < 20:
             response = requests.get(
                 url, headers=self.__headers, params=params            )
@@ -34,7 +42,8 @@ class HeadHunterAPI(VacancyParser):
         return items
 
 
-    def get_list_employers(self, employer_name):
+    def get_list_employers(self, employer_name:str) -> list[Employers]:
+        """ Метод для получения списка работодателей по слову в названии """
         list_employers = []
         params = {"text": employer_name,
                   "only_with_vacancies": True,
@@ -53,8 +62,21 @@ class HeadHunterAPI(VacancyParser):
 
         return list_employers
 
+    def get_employer_info(self, employer_id:int) -> EmployerInfo:
+        """ Метод для получения информации о работодателе по ID"""
+        params = {}
+        employer = self.get_items(f'employers/{employer_id}/', params, False)
+        employer_dict = {
+            "employer_id": employer["id"],
+            "name": employer["name"],
+            "employer_url": employer["site_url"],
+            "employer_city": employer["area"]["name"],
+            "url": employer["alternate_url"]
+        }
+        return EmployerInfo.add_employer(employer_dict)
 
-    def get_vacancies(self, employer_ids:list, only_with_salary:bool, keyword: str = "") -> list[Vacancy]:
+
+    def get_vacancies(self, employer_ids:list, only_with_salary:bool, keyword: str = "python") -> list[Vacancy]:
         """ Метод для получения списка словарей вакансий по ключевому слову.
             По умолчанию вакансии загружаются по слову 'python'. """
 

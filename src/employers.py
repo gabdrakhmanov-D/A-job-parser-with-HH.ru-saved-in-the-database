@@ -2,12 +2,14 @@ class Employers:
     employer_id: int
     name: str
     open_vacancies: str
+    url: str
 
-    __slots__ = ('employer_id', 'name', 'open_vacancies')
+    __slots__ = ('employer_id', 'name', 'open_vacancies', 'url')
 
-    def __init__(self, employer_id, name, open_vacancies):
+    def __init__(self, employer_id, name, open_vacancies, url):
         self.employer_id = employer_id
         self.name = name
+        self.url = url
         self.open_vacancies = open_vacancies
 
     @classmethod
