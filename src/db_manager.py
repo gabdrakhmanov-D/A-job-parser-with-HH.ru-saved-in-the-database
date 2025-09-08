@@ -27,7 +27,7 @@ class DBManager(CreateDB):
 
         return rows
 
-    def get_all_vacancies(self):
+    def get_all_vacancies(self) -> list[tuple]:
         """ Получает список всех вакансий с указанием названия компании,
          названия вакансии, зарплаты и ссылки на вакансию."""
 
@@ -47,7 +47,7 @@ class DBManager(CreateDB):
         return rows
 
 
-    def get_avg_salary(self):
+    def get_avg_salary(self) -> int:
         """ Получает среднюю зарплату по вакансиям."""
 
         conn = psycopg2.connect(dbname=self.database_name, **self.__config_db)
@@ -60,16 +60,16 @@ class DBManager(CreateDB):
                     SELECT AVG(salary_to) as salary FROM vacancies)
                 """
             )
-            rows = round(cur.fetchone()[0], 2)
+            salary = round(cur.fetchone()[0], 2)
 
         conn.commit()
         conn.close()
 
-        return rows
+        return int(salary)
 
 
 
-    def get_vacancies_with_higher_salary(self):
+    def get_vacancies_with_higher_salary(self) -> list[tuple]:
         """ Получает список всех вакансий, у которых зарплата выше средней по всем вакансиям."""
 
         conn = psycopg2.connect(dbname=self.database_name, **self.__config_db)
@@ -91,8 +91,8 @@ class DBManager(CreateDB):
 
         return rows
 
-    def get_vacancies_with_keyword(self, keyword):
-        """ Получает список всех вакансий, в названии которых содержатся переданные в метод слова, например python."""
+    def get_vacancies_with_keyword(self, keyword:str) -> list[tuple]:
+        """ Получает список всех вакансий, в названии которых содержатся переданные в метод слова."""
 
         keyword_capitalize = f'%{keyword.capitalize()}%'
         keyword_lower =  f'{keyword.lower()}%'
