@@ -53,7 +53,7 @@ class HeadHunterAPI(VacancyParser):
 
         for employer in employers:
             employer_dict = {
-                "id": employer["id"],
+                "employer_id": employer["id"],
                 "name": employer["name"],
                 "url": employer["alternate_url"],
                 "open_vacancies": employer["open_vacancies"]
@@ -91,7 +91,7 @@ class HeadHunterAPI(VacancyParser):
                           "per_page": self.__params["per_page"],
                           "text": self.keyword
                         }
-
+                employer_info = self.get_employer_info(employer_id)
                 list_vacancies = []
                 vacancies = self.get_items('vacancies/', params)
                 for vacancy in vacancies:
@@ -107,7 +107,7 @@ class HeadHunterAPI(VacancyParser):
                     }
                     list_vacancies.append(Vacancy.add_vacancy(vacancy_dict))
 
-                list_employers_and_vacancies.append({employer_id: list_vacancies})
+                list_employers_and_vacancies.append({employer_info: list_vacancies})
             return list_employers_and_vacancies
 
         except ConnectionError:

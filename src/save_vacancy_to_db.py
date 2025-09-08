@@ -8,52 +8,61 @@ class SaveVacancyToDB(CreateDB):
         super().__init__(database_name)
         self.__config_db = self.get_config()
 
-    def save_vacancy_to_database(self, list_of_vacancies) -> None:
+    def save_vacancy_to_database(self, list_employers_and_vacancies) -> None:
         """ Сохранение данных о вакансии в базу данных."""
 
         conn = psycopg2.connect(dbname=self.database_name, **self.__config_db)
 
         with conn.cursor() as cur:
-            for vacancy in list_of_vacancies:
-                company_name = vacancy.employer_name
-                job_title = vacancy.job_title
-                requirements = vacancy.requirements
-                responsibility = vacancy.responsibility
-                salary_from = vacancy.salary_from
-                salary_to = vacancy.salary_to
-                job_link = vacancy.job_link
-                experience = vacancy.experience
-                cur.execute(
-                    """
-                        INSERT INTO companies (company_name)
-                        SELECT (%s)
-                        WHERE NOT EXISTS (SELECT 1 FROM companies WHERE company_name = (%s));
-                        SELECT company_id FROM companies WHERE company_name = (%s)
-                    """,
-                    (company_name, company_name, company_name)
-                )
-                company_id = cur.fetchone()[0]
-                cur.execute(
-                    """
-                    INSERT INTO vacancies (job_title,
-                                           company_id,
-                                           requirements,
-                                           responsibility,
-                                           experience,
-                                           salary_from,
-                                           salary_to,
-                                           job_link)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-                    """,
-                    (job_title,
-                          company_id,
-                          requirements,
-                          responsibility,
-                          experience,
-                          salary_from,
-                          salary_to,
-                          job_link)
-                )
+            for item in list_employers_and_vacancies:
+                for employer, vacancies in item.items():
+                    print(employer.employer_id, employer.name, employer.city, employer.url, employer.employer_url)
+
+                    employer_id = employer.employer_id
+                    name = employer.name
+                    city = employer.city
+                    url = employer.url
+                    employer_url = employer.employer_url
+
+                    cur.execute(
+                        """
+                            INSERT INTO employers (external_id, name, city, url, link_to_profile)
+                            VALUES (%s, %s, %s, %s, %s)
+                            RETURNING id
+                        """,
+                        (employer_id, name, city, url, employer_url)
+                    )
+                    employer_id = cur.fetchone()[0]
+
+                    for vacancy in vacancies:
+                        job_title = vacancy.job_title
+                        requirements = vacancy.requirements
+                        responsibility = vacancy.responsibility
+                        salary_from = vacancy.salary_from
+                        salary_to = vacancy.salary_to
+                        job_link = vacancy.job_link
+                        experience = vacancy.experience
+                        cur.execute(
+                            """
+                            INSERT INTO vacancies (job_title,
+                                                   employer_id,
+                                                   requirements,
+                                                   responsibility,
+                                                   experience,
+                                                   salary_from,
+                                                   salary_to,
+                                                   job_link)
+                            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                            """,
+                            (job_title,
+                                  employer_id,
+                                  requirements,
+                                  responsibility,
+                                  experience,
+                                  salary_from,
+                                  salary_to,
+                                  job_link)
+                        )
 
         conn.commit()
         conn.close()
