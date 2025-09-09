@@ -63,7 +63,7 @@ class CreateDB:
                         experience VARCHAR(50),
                         salary_from INTEGER,
                         salary_to INTEGER,
-                        job_link TEXT UNIQUE                        
+                        job_link VARCHAR(255) UNIQUE                        
                     )
                 """)
 
