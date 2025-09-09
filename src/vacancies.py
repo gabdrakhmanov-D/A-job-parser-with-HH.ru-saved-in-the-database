@@ -7,28 +7,31 @@ class Vacancy:
     salary_to: int
     requirements: str  # требования
     responsibility: str  # обязанности
-    employer_name:str # название компании
-    experience:str # требуемый опыт
+    employer_name: str  # название компании
+    experience: str  # требуемый опыт
 
-    __slots__ = ("job_title",
-                 "job_link",
-                 "salary_from",
-                 "salary_to",
-                 "requirements",
-                 "responsibility",
-                 "employer_name",
-                 "experience")
+    __slots__ = (
+        "job_title",
+        "job_link",
+        "salary_from",
+        "salary_to",
+        "requirements",
+        "responsibility",
+        "employer_name",
+        "experience",
+    )
 
-    def __init__(self,
-                 job_title: str,
-                 requirements: str,
-                 responsibility: str,
-                 salary_from: int,
-                 salary_to:int,
-                 job_link: str,
-                 employer_name: str,
-                 experience: str
-                 ):
+    def __init__(
+        self,
+        job_title: str,
+        requirements: str,
+        responsibility: str,
+        salary_from: int,
+        salary_to: int,
+        job_link: str,
+        employer_name: str,
+        experience: str,
+    ):
 
         self.job_title = job_title
         self.requirements = requirements

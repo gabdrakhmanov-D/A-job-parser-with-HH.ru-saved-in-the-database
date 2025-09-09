@@ -11,9 +11,10 @@ class CreateDB:
         self.database_name = database_name
         self.__config_db = self.get_config()
 
-
-    def get_config(self, filename:str=PATH_TO_DB_INI, section:str= "postgresql") -> dict:
-        """ Метод для получения конфигурации базы данных """
+    def get_config(
+        self, filename: str = PATH_TO_DB_INI, section: str = "postgresql"
+    ) -> dict:
+        """Метод для получения конфигурации базы данных"""
         parser = ConfigParser()
         parser.read(filename)
         self.__config_db = {}
@@ -24,11 +25,12 @@ class CreateDB:
             return self.__config_db
         else:
             raise Exception(
-                'Section {0} is not found in the {1} file.'.format(section, filename))
+                "Section {0} is not found in the {1} file.".format(section, filename)
+            )
 
     def create_new_db(self):
-        """ Метод, который создает новую базу данных """
-        conn = psycopg2.connect(dbname='postgres', **self.__config_db)
+        """Метод, который создает новую базу данных"""
+        conn = psycopg2.connect(dbname="postgres", **self.__config_db)
         conn.autocommit = True
         cur = conn.cursor()
         try:
@@ -37,11 +39,11 @@ class CreateDB:
         except psycopg2.errors.DuplicateDatabase:
             return
 
-
     def create_tables(self):
         conn = psycopg2.connect(dbname=self.database_name, **self.__config_db)
         with conn.cursor() as cur:
-            cur.execute("""
+            cur.execute(
+                """
                     CREATE TABLE IF NOT EXISTS employers (
                         id SERIAL PRIMARY KEY,
                         external_id VARCHAR(100) NOT NULL,
@@ -50,10 +52,12 @@ class CreateDB:
                         url VARCHAR(100) NOT NULL,
                         link_to_profile VARCHAR(100) NOT NULL
                     )
-                """)
+                """
+            )
 
         with conn.cursor() as cur:
-            cur.execute("""
+            cur.execute(
+                """
                     CREATE TABLE IF NOT EXISTS vacancies (
                         id SERIAL PRIMARY KEY,
                         job_title VARCHAR NOT NULL,
@@ -63,9 +67,10 @@ class CreateDB:
                         experience VARCHAR(50),
                         salary_from INTEGER,
                         salary_to INTEGER,
-                        job_link VARCHAR(255) UNIQUE                        
+                        job_link VARCHAR(255) UNIQUE
                     )
-                """)
+                """
+            )
 
         conn.commit()
         conn.close()

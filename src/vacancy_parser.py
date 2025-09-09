@@ -13,5 +13,5 @@ class VacancyParser(ABC):
         pass
 
     @abstractmethod
-    def get_vacancies(self, keyword: str, employer_id:int, only_with_salary:bool):
+    def get_vacancies(self, keyword: str, employer_id: int, only_with_salary: bool):
         pass

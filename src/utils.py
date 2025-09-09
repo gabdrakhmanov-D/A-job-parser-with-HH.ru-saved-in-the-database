@@ -12,15 +12,18 @@ def read_json(file=PATH_TO_EMPLOYERS_ID):
 
 def db_creation_request() -> str:
     while True:
-        result = input('Выберите вариант: \n'
-                       '1. Скачать вакансии и сохранить их в новую базу данных.\n'
-                       '2. Открыть существующую базу данных с вакансиями.\n')
-        if result not in ['1', '2']:
-            print('Вы ввели недопустимое значение, повторите попытку')
+        result = input(
+            "Выберите вариант: \n"
+            "1. Скачать вакансии и сохранить их в новую базу данных.\n"
+            "2. Открыть существующую базу данных с вакансиями.\n"
+        )
+        if result not in ["1", "2"]:
+            print("Вы ввели недопустимое значение, повторите попытку")
         else:
             return result
 
-def get_list_titles_and_id(list_id_employers:list) -> tuple[list,list]:
+
+def get_list_titles_and_id(list_id_employers: list) -> tuple[list, list]:
     ids_list = []
     names_list = []
     for employer in list_id_employers:
@@ -32,41 +35,44 @@ def get_list_titles_and_id(list_id_employers:list) -> tuple[list,list]:
 
 def only_salary_request() -> bool:
     while True:
-        with_salary = input('Вы хотите загрузить вакансии в которых указана зарплата?\n Да/Нет: ').lower()
-        if with_salary == 'да':
+        with_salary = input(
+            "Вы хотите загрузить вакансии в которых указана зарплата?\n Да/Нет: "
+        ).lower()
+        if with_salary == "да":
             return True
-        elif with_salary == 'нет':
+        elif with_salary == "нет":
             return False
-        print('Вы ввели некорректное значение, повторите ввод.')
-
+        print("Вы ввели некорректное значение, повторите ввод.")
 
 
 def get_command_from_user():
     while True:
-        selector = input('Выберите команду которую необходимо выполнить:\n'
-                         '1. Получить список всех компаний и количество вакансий у каждой компании.\n'
-                         '2. Получить список всех вакансий с указанием названия компании, названия вакансии, зарплаты и ссылки на вакансию.\n'
-                         '3. Получить среднюю зарплату по вакансиям.\n'
-                         '4. Получить список всех вакансий, у которых зарплата выше средней по всем вакансиям.\n'
-                         '5. Получить список всех вакансий, в названии которых содержатся ключевое слово\n')
-        if selector in ['1', '2', '3', '4', '5']:
+        selector = input(
+            "Выберите команду которую необходимо выполнить:\n"
+            "1. Получить список всех компаний и количество вакансий у каждой компании.\n"
+            "2. Получить список всех вакансий с указанием названия компании, названия вакансии, зарплаты и ссылки на вакансию.\n"
+            "3. Получить среднюю зарплату по вакансиям.\n"
+            "4. Получить список всех вакансий, у которых зарплата выше средней по всем вакансиям.\n"
+            "5. Получить список всех вакансий, в названии которых содержатся ключевое слово\n"
+        )
+        if selector in ["1", "2", "3", "4", "5"]:
             return selector
-        print('Вы ввели некорректное значение, повторите ввод.')
+        print("Вы ввели некорректное значение, повторите ввод.")
 
 
-def get_result(db_manager:DBManager, selector):
-    if selector == '1':
+def get_result(db_manager: DBManager, selector):
+    if selector == "1":
         print(db_manager.get_companies_and_vacancies_count())
 
-    elif selector == '2':
+    elif selector == "2":
         print(db_manager.get_all_vacancies())
 
-    elif selector == '3':
+    elif selector == "3":
         print(db_manager.get_avg_salary())
 
-    elif selector == '4':
+    elif selector == "4":
         print(db_manager.get_vacancies_with_higher_salary())
 
-    elif selector == '5':
-        keyword = input('Введите слово, которое содержится в вакансии: ')
+    elif selector == "5":
+        keyword = input("Введите слово, которое содержится в вакансии: ")
         print(db_manager.get_vacancies_with_keyword(keyword))

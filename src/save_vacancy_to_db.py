@@ -9,7 +9,7 @@ class SaveVacancyToDB(CreateDB):
         self.__config_db = self.get_config()
 
     def save_vacancy_to_database(self, list_employers_and_vacancies) -> None:
-        """ Сохранение данных о вакансии в базу данных."""
+        """Сохранение данных о вакансии в базу данных."""
 
         conn = psycopg2.connect(dbname=self.database_name, **self.__config_db)
         with conn.cursor() as cur:
@@ -27,7 +27,7 @@ class SaveVacancyToDB(CreateDB):
                             VALUES (%s, %s, %s, %s, %s)
                             RETURNING id
                         """,
-                        (employer_id, name, city, url, employer_url)
+                        (employer_id, name, city, url, employer_url),
                     )
                     employer_id = cur.fetchone()[0]
                     for vacancy in vacancies:
@@ -51,14 +51,16 @@ class SaveVacancyToDB(CreateDB):
                             VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                             ON CONFLICT DO NOTHING;
                             """,
-                            (job_title,
-                                  employer_id,
-                                  requirements,
-                                  responsibility,
-                                  experience,
-                                  salary_from,
-                                  salary_to,
-                                  job_link)
+                            (
+                                job_title,
+                                employer_id,
+                                requirements,
+                                responsibility,
+                                experience,
+                                salary_from,
+                                salary_to,
+                                job_link,
+                            ),
                         )
 
         conn.commit()

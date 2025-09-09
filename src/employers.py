@@ -4,7 +4,7 @@ class Employers:
     open_vacancies: str
     url: str
 
-    __slots__ = ('employer_id', 'name', 'open_vacancies', 'url')
+    __slots__ = ("employer_id", "name", "open_vacancies", "url")
 
     def __init__(self, employer_id, name, open_vacancies, url):
         self.employer_id = employer_id

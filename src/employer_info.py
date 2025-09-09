@@ -5,7 +5,7 @@ class EmployerInfo:
     city: str
     url: str  # профиль работодателя
 
-    __slots__ = ('employer_id', 'name', 'employer_url', 'city', 'url')
+    __slots__ = ("employer_id", "name", "employer_url", "city", "url")
 
     def __init__(self, employer_id, name, employer_url, employer_city, url):
         self.employer_id = employer_id
