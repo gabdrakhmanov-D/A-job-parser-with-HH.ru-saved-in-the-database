@@ -4,6 +4,8 @@ from src.creator_db import CreateDB
 
 
 class DBManager(CreateDB):
+    """ Класс для запроса к БД и выдаче таблиц с результатами. """
+
     def __init__(self, database_name):
         super().__init__(database_name)
         self.__config_db = self.get_config()

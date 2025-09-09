@@ -1,8 +1,9 @@
 class EmployerInfo:
+    """ Класс для хранения подробной информации о работодателе. """
     employer_id: int
-    name: str
+    name: str # название компании
     employer_url: str  # сайт работодателя
-    city: str
+    city: str # город работодателя
     url: str  # профиль работодателя
 
     __slots__ = ("employer_id", "name", "employer_url", "city", "url")

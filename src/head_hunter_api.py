@@ -1,7 +1,7 @@
 import requests
 
 from src.employer_info import EmployerInfo
-from src.employers import Employers
+from src.foundemployers import FoundEmployers
 from src.vacancies import Vacancy
 from src.vacancy_parser import VacancyParser
 
@@ -40,7 +40,7 @@ class HeadHunterAPI(VacancyParser):
 
         return items
 
-    def get_list_employers(self, employer_name: str) -> list[Employers]:
+    def get_list_employers(self, employer_name: str) -> list[FoundEmployers]:
         """Метод для получения списка работодателей по слову в названии"""
         list_employers = []
         params = {
@@ -58,7 +58,7 @@ class HeadHunterAPI(VacancyParser):
                 "url": employer["alternate_url"],
                 "open_vacancies": employer["open_vacancies"],
             }
-            list_employers.append(Employers.add_employer(employer_dict))
+            list_employers.append(FoundEmployers.add_employer(employer_dict))
 
         return list_employers
 

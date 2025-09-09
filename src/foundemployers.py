@@ -1,8 +1,9 @@
-class Employers:
+class FoundEmployers:
+    """ Класс для хранения информации о найденных работодателях """
     employer_id: int
-    name: str
-    open_vacancies: str
-    url: str
+    name: str # название компании
+    open_vacancies: str # количество вакансий у компании
+    url: str # ссылка на профиль компании
 
     __slots__ = ("employer_id", "name", "open_vacancies", "url")
 
@@ -19,9 +20,9 @@ class Employers:
 
     @staticmethod
     def __verify_data(other):
-        """Метод для проверки принадлежности объекта к классу int или Employers"""
-        if not isinstance(other, (int, Employers)):
-            raise TypeError("Сравнивать можно только с типом int или Employers")
+        """Метод для проверки принадлежности объекта к классу int или FoundEmployers"""
+        if not isinstance(other, (int, FoundEmployers)):
+            raise TypeError("Сравнивать можно только с типом int или FoundEmployers")
         return other if isinstance(other, int) else other.open_vacancies
 
     def __eq__(self, other):

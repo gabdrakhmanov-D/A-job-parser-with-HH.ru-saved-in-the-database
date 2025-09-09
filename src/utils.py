@@ -4,13 +4,15 @@ from config import PATH_TO_EMPLOYERS_ID
 from src.db_manager import DBManager
 
 
-def read_json(file=PATH_TO_EMPLOYERS_ID):
+def read_json(file=PATH_TO_EMPLOYERS_ID) -> dict:
+    """Функция для чтения файла json"""
     with open(file, "r", encoding="utf-8") as f:
         data = json.load(f)
     return data
 
 
 def db_creation_request() -> str:
+    """ Запрос пользователя о создании БД """
     while True:
         result = input(
             "Выберите вариант: \n"
@@ -24,6 +26,7 @@ def db_creation_request() -> str:
 
 
 def get_list_titles_and_id(list_id_employers: list) -> tuple[list, list]:
+    """ Функция для возврата списков ID и названий компаний """
     ids_list = []
     names_list = []
     for employer in list_id_employers:
@@ -34,6 +37,7 @@ def get_list_titles_and_id(list_id_employers: list) -> tuple[list, list]:
 
 
 def only_salary_request() -> bool:
+    """ Запрос пользователя о загрузке вакансий с указанием или нет зарплаты """
     while True:
         with_salary = input(
             "Вы хотите загрузить вакансии в которых указана зарплата?\n Да/Нет: "
@@ -46,6 +50,7 @@ def only_salary_request() -> bool:
 
 
 def get_command_from_user():
+    """ Запрос пользователя о выборе выдачи результата """
     while True:
         selector = input(
             "Выберите команду которую необходимо выполнить:\n"
@@ -60,7 +65,8 @@ def get_command_from_user():
         print("Вы ввели некорректное значение, повторите ввод.")
 
 
-def get_result(db_manager: DBManager, selector):
+def get_result(db_manager: DBManager, selector) -> None:
+    """ Функция для печати результата в консоль """
     if selector == "1":
         print(db_manager.get_companies_and_vacancies_count())
 
@@ -68,7 +74,7 @@ def get_result(db_manager: DBManager, selector):
         print(db_manager.get_all_vacancies())
 
     elif selector == "3":
-        print(db_manager.get_avg_salary())
+        print(f'Cредняя зарплата по вакансиям: {db_manager.get_avg_salary()} RUB')
 
     elif selector == "4":
         print(db_manager.get_vacancies_with_higher_salary())

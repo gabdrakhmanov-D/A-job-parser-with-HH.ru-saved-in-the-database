@@ -5,6 +5,7 @@ from config import PATH_TO_DB_INI
 
 
 class CreateDB:
+    """ Класс для создания базы данных с таблицами. """
     database_name: str
 
     def __init__(self, database_name):
@@ -40,6 +41,7 @@ class CreateDB:
             return
 
     def create_tables(self):
+        """ Метод для созданий таблиц вакансий и компаний """
         conn = psycopg2.connect(dbname=self.database_name, **self.__config_db)
         with conn.cursor() as cur:
             cur.execute(

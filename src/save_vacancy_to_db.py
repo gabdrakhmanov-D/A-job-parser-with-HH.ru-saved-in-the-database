@@ -4,12 +4,13 @@ from src.creator_db import CreateDB
 
 
 class SaveVacancyToDB(CreateDB):
+    """ Класс для сохранения вакансий и компаний в БД. """
     def __init__(self, database_name):
         super().__init__(database_name)
         self.__config_db = self.get_config()
 
     def save_vacancy_to_database(self, list_employers_and_vacancies) -> None:
-        """Сохранение данных о вакансии в базу данных."""
+        """Сохранение данных о вакансии и работодателе в базу данных."""
 
         conn = psycopg2.connect(dbname=self.database_name, **self.__config_db)
         with conn.cursor() as cur:
