@@ -67,10 +67,10 @@ class DBManager(CreateDB):
 
         with conn.cursor() as cur:
             cur.execute(
-                """ SELECT AVG(salary) FROM
+                """ SELECT AVG(avg_salary.salary) FROM
                    (SELECT AVG(salary_from) as salary FROM vacancies
                     UNION
-                    SELECT AVG(salary_to) as salary FROM vacancies)
+                    SELECT AVG(salary_to) as salary FROM vacancies) avg_salary
                 """
             )
             salary = round(cur.fetchone()[0], 2)
@@ -98,10 +98,10 @@ class DBManager(CreateDB):
                     FROM vacancies
                     JOIN employers ON vacancies.employer_id=employers.id
                     WHERE salary_from >
-                   (SELECT AVG(salary) FROM
+                   (SELECT AVG(avg_salary.salary) FROM
                    (SELECT AVG(salary_from) as salary FROM vacancies
                     UNION
-                    SELECT AVG(salary_to) as salary FROM vacancies))
+                    SELECT AVG(salary_to) as salary FROM vacancies) avg_salary)
                     ORDER BY vacancies.salary_from DESC
                 """
             )
