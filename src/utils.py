@@ -1,6 +1,7 @@
 import json
 
 from config import PATH_TO_EMPLOYERS_ID
+from src.creator_db import CreateDB
 from src.db_manager import DBManager
 
 
@@ -59,8 +60,9 @@ def get_command_from_user():
             "3. Получить среднюю зарплату по вакансиям.\n"
             "4. Получить список всех вакансий, у которых зарплата выше средней по всем вакансиям.\n"
             "5. Получить список всех вакансий, в названии которых содержатся ключевое слово\n"
+            "0. Для выхода из программы. \n"
         )
-        if selector in ["1", "2", "3", "4", "5"]:
+        if selector in ["0", "1", "2", "3", "4", "5"]:
             return selector
         print("Вы ввели некорректное значение, повторите ввод.")
 
@@ -82,3 +84,16 @@ def get_result(db_manager: DBManager, selector) -> None:
     elif selector == "5":
         keyword = input("Введите слово, которое содержится в вакансии: ")
         print(db_manager.get_vacancies_with_keyword(keyword))
+
+
+def chek_db(db_name: str) -> bool:
+    db_found = CreateDB(db_name).chek_db()
+    create = False
+
+    if not db_found:
+        user_request_to_create = input(
+            'Такой базы данных не существует, вы хотите её создать и сохранить в неё вакансии?\n Да/Нет   ').lower()
+        if user_request_to_create == 'да':
+            create = True
+            return create
+    return create

@@ -8,7 +8,7 @@ from src.utils import (
     get_list_titles_and_id,
     only_salary_request,
     get_command_from_user,
-    get_result,
+    get_result, chek_db,
 )
 
 
@@ -17,8 +17,15 @@ def user_interaction() -> None:
 
     user_request_create_db = db_creation_request()
     db_name = input("Введите название базы данных\n").lower()
+    db_availability = False
 
-    if user_request_create_db == "1":
+    if user_request_create_db == '2':
+        db_availability = chek_db(db_name)
+        if not db_availability:
+            print('Работа программы завершена')
+            return
+
+    if user_request_create_db == "1" or db_availability:
         try:
             new_db = CreateDB(db_name)
             new_db.create_new_db()
@@ -46,13 +53,12 @@ def user_interaction() -> None:
         save_vacancies = SaveVacancyToDB(new_db.database_name)
         save_vacancies.save_vacancy_to_database(hh_vacancies)
 
-    chek_db = CreateDB(db_name).chek_db()
-    if not chek_db:
-        return print('Такой базы данных не существует!')
-
     db_manager = DBManager(db_name)
-    selector = get_command_from_user()
-    get_result(db_manager, selector)
+    while True:
+        selector = get_command_from_user()
+        if selector == "0":
+            break
+        get_result(db_manager, selector)
 
 
 if __name__ == "__main__":
