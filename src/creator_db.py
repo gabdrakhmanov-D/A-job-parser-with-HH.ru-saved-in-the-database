@@ -29,6 +29,20 @@ class CreateDB:
                 "Section {0} is not found in the {1} file.".format(section, filename)
             )
 
+
+    def chek_db(self):
+        conn = psycopg2.connect(dbname="postgres", **self.__config_db)
+        with conn.cursor() as cur:
+            cur.execute(
+                    """ SELECT EXISTS(SELECT 1 FROM pg_database
+                        WHERE datname=%s)
+                          """, (self.database_name,)
+                )
+            res = cur.fetchone()[0]
+        conn.close()
+        return res
+
+
     def create_new_db(self):
         """Метод, который создает новую базу данных"""
         conn = psycopg2.connect(dbname="postgres", **self.__config_db)

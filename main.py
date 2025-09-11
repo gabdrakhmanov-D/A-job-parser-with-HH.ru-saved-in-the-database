@@ -46,6 +46,10 @@ def user_interaction() -> None:
         save_vacancies = SaveVacancyToDB(new_db.database_name)
         save_vacancies.save_vacancy_to_database(hh_vacancies)
 
+    chek_db = CreateDB(db_name).chek_db()
+    if not chek_db:
+        return print('Такой базы данных не существует!')
+
     db_manager = DBManager(db_name)
     selector = get_command_from_user()
     get_result(db_manager, selector)
