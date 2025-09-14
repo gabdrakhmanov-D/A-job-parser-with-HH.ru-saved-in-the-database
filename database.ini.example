@@ -1,0 +1,5 @@
+[postgresql]
+host='your_host'
+user='user_name'
+password='password_db'
+port='port_db'
